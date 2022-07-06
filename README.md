@@ -1,1 +1,3 @@
-# Python-Netflix-DataAnalysis
+# Python İle Netflix Filmlerinin Analizi ve Görselleştirilmesi
+
+
