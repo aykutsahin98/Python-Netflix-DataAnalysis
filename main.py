@@ -85,5 +85,25 @@ print("-------------------------------------------------------------------------
 #Genre Kategorileri Nelerdir
 print(netflix['Genre'].unique())
 
+print("---------------------------------------------------------------------------------")
+
+#IMDB Puanı en düşük olan 10 film ve dili
+imdblanguage=(netflix.groupby("Language")["IMDB Score"].mean().nsmallest(10))
+print(imdblanguage)
+
+#IMDB Puanı en düşük olan 10 film ve dili. Görselleştirilmiş hali
+imdblanguageplot = sns.barplot(x=imdblanguage.values, y=imdblanguage.index, orient='h')
+imdblanguageplot.set(ylabel="Language", xlabel="IMDB scores")
+
+print("---------------------------------------------------------------------------------")
+
+#IMDB Puanı en düşük olan 10 film ve dili. Görselleştirilmiş hali
+imdblanguageplot = sns.barplot(x=imdblanguage.values, y=imdblanguage.index, orient='h')
+imdblanguageplot.set(ylabel="Language",xlabel="IMDB scores")
+pl.show()
+
+print("---------------------------------------------------------------------------------")
+
+
 
 
