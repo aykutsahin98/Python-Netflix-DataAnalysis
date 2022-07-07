@@ -15,3 +15,4 @@
 
 ✅ Hangi yılda en fazla film yayımlanmıştır? Görselleştiriniz.
 
+✅ Hangi dilde yayımlanan filmler en düşük ortalama IMDB puanına sahiptir? Görselleştiriniz
