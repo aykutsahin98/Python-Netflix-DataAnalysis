@@ -1,8 +1,8 @@
 import pandas as pd
-import numpy as np
 import seaborn as sns
-sns.set(color_codes = True)  #sets nice background color
+#sns.set(color_codes = True)  #sets nice background color
 import matplotlib.pyplot as pl
+import plotly.express as px
 netflix =pd.read_csv('NetflixOriginals.csv', encoding="latin-1")
 
 #Viewing first few rows of the dataset
@@ -39,24 +39,20 @@ find_long = find_long[["Language", "Title", "Runtime"]].dropna()
 print(find_long)
 
 #Görselleştirilmiş Hali
+pl.figure(figsize=(12,12))
 language_high_plot = sns.barplot(data = find_long, x='Runtime', y='Language')
+pl.title("Dillere Göre Süreler")
+pl.xticks(rotation = 90)
 pl.show()
 
 print("---------------------------------------------------------------------------------")
 
 print("2019 Ocak İle 2020 Haziran Tarihleri Arasında 'Documentary' Türünde Çekilmiş Filmlerin IMDB Değerlerini Bulup Görselleştiriniz.\n")
-find_Documentary = netflix.where(netflix['Genre'] == 'Documentary')
-find_Documentary_imdb = find_Documentary[["Year", "IMDB Score", "Title", "Genre"]]
-find_Documentary_imdb_2019 = find_Documentary_imdb.where(netflix['Year'] == 2019)
-find_Documentary_imdb_2020 = find_Documentary_imdb.where(netflix['Year'] == 2020)
+netflix["Date"] = pd.to_datetime(netflix.Premiere)
 
-find_Documentary_imdb_year = pd.concat([find_Documentary_imdb_2019, find_Documentary_imdb_2020])
-find_Documentary_imdb_year = find_Documentary_imdb_year.dropna()
-print(find_Documentary_imdb_year)
-
-#Görselleştirilmiş Hali
-find_Documentary_imdb_year_plot = sns.barplot(data = find_Documentary_imdb_year, x='Year', y='IMDB Score')
-pl.show()
+DateSort = netflix.loc[(netflix["Genre"] == "Documentary") & (netflix["Date"] > "2019-01-31") & (netflix["Date"] < "2020-06-01")]
+DateSortFig = px.bar(DateSort, x=DateSort.Title, y = DateSort["IMDB Score"])
+DateSortFig.show()
 
 print("---------------------------------------------------------------------------------")
 
@@ -69,10 +65,9 @@ print(maks)
 print("---------------------------------------------------------------------------------")
 
 print("'Hindi' Dilinde Çekilmiş Olan Filmlerin Ortalama 'Runtime' Süresi Nedir?\n")
-find_Hindi = netflix.where(netflix['Language'] == 'Hindi')
-find_Hindi = find_Hindi[["Year", "Language", "Title", "Runtime"]].dropna()
-average = find_Hindi[["Runtime"]].mean()
-print(find_Hindi)
+Hindi = netflix.loc[(netflix["Language"] == "Hindi")]
+b = Hindi.Runtime
+print(b.mean())
 
 print("---------------------------------------------------------------------------------")
 
@@ -81,6 +76,13 @@ print(netflix['Genre'].nunique())
 
 print("Genre Kategorileri Nelerdir?\n")
 print(netflix['Genre'].unique())
+
+print()
+genre = netflix.Genre.value_counts().nlargest(20)
+print(genre)
+
+fig = px.bar(data_frame=genre, x=genre.index, y=genre.values, labels={"y":"Genre Movies", "index":"Genres"})
+fig.show()
 
 print("---------------------------------------------------------------------------------")
 
@@ -97,9 +99,14 @@ print(top_10_movies)
 print("---------------------------------------------------------------------------------")
 
 print("IMDB Puanı İle 'Runtime' Arasında Nasıl Bir Korelasyon Vardır? İnceleyip Görselleştiriniz\n")
+
+print(netflix["Runtime"].corr(netflix["IMDB Score"]))
+
+#Grafikte de görüldüğü üzere belirli bir dağılım gözükmemekte.
 sns.regplot(data=netflix,x='IMDB Score',y='Runtime');
 pl.title('Scatter plot of runtime and IMDB score');
 pl.show()
+
 
 print("---------------------------------------------------------------------------------")
 
@@ -150,6 +157,26 @@ for x in range(2014,2022):
     find_year_runtime_year_s = pd.concat([find_year_runtime_year_s, find_year_runtime_year])
 print(find_year_runtime_year_s)
 
+print("---------------------------------------------------------------------------------")
 
+print("Her Bir Dilin En Fazla Kullanıldığı 'Genre' Nedir?")
+print(netflix.groupby("Language")["Genre"].value_counts().groupby(level=0).head(1))
 
+print("---------------------------------------------------------------------------------")
 
+print("Veri Setinde Outlier Veri Varmı? Açıklayınız")
+
+print(netflix['IMDB Score'].head(3))
+print()
+print(netflix['IMDB Score'].describe().T)
+
+print("Burada verilen maksimum puanın 9,0 ve minimum puanın 2,5 olduğunu ve ortalama puanın 6,27 olduğunu ve tüm puanların\n "
+      "medyanının 6,35 olduğunu görebiliriz, çünkü medyan ortalama puandan daha büyük olduğundan verilerimiz aykırı olabilir.\n "
+      "Bunun için bir histogram çizerek görselleştirelim.\n")
+
+sns.histplot(x=netflix['IMDB Score'],color='blue',data=netflix)
+pl.show()
+
+import warnings
+warnings.filterwarnings('ignore')
+sns.boxplot(netflix['IMDB Score'])
