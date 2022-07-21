@@ -15,4 +15,11 @@
 
 ✅ Hangi yılda en fazla film yayımlanmıştır? Görselleştiriniz.
 
-✅ Hangi dilde yayımlanan filmler en düşük ortalama IMDB puanına sahiptir? Görselleştiriniz
+✅ Hangi dilde yayımlanan filmler en düşük ortalama IMDB puanına sahiptir? Görselleştiriniz.
+
+✅ Hangi yılın toplam "runtime" süresi en fazladır?
+
+✅ Her bir dilin en fazla kullanıldığı "Genre" nedir?
+
+✅ Veri setinde outlier veri var mıdır? Açıklayınız.
+
