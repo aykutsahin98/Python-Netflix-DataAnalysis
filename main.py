@@ -1,5 +1,6 @@
 import pandas as pd
 import seaborn as sns
+import numpy as np
 #sns.set(color_codes = True)  #sets nice background color
 import matplotlib.pyplot as pl
 import plotly.express as px
@@ -180,3 +181,42 @@ pl.show()
 import warnings
 warnings.filterwarnings('ignore')
 sns.boxplot(netflix['IMDB Score'])
+
+print("---------------------------------------------------------------------------------")
+
+print("Veri Setinde Outlier Veri Varmı? Açıklayınız")
+
+runtime_nr=len(netflix.Runtime)
+print("Toplam film sayısı:",runtime_nr)
+print("------")
+print("Boxplot chart of Runtime:")
+sns.boxplot(x=netflix.Runtime);
+
+# Runtime verisi üzerinde Outlier Analizi
+
+outliers=[]
+threshold=3
+meanflix=np.mean(netflix.Runtime)
+stdflix=np.std(netflix.Runtime)
+print("Ortalama süre",meanflix, "dakikadır.")
+print("---------------------------------------------------------------------")
+
+q1=np.quantile(netflix.Runtime, 0.25)
+q2=np.quantile(netflix.Runtime, 0.5)
+q3=np.quantile(netflix.Runtime, 0.75)
+iqr=q3-q1
+
+print("Q1=",q1)
+print("Q2=",q2)
+print("Q3=",q3)
+print("IQR=",iqr)
+print("---------------------------------------------------------------------")
+
+for y in netflix.Runtime:
+  z_score = (y- meanflix)/stdflix
+  if np.abs(z_score) > threshold:
+    outliers.append(y)
+#return outliers
+print("Outlier veri olarak görülebilecek film süreleri:", outliers)
+print("Bu değerler değerlendirmeye alınamayacak kadar küçük ve büyük değerlerdir.")
+
